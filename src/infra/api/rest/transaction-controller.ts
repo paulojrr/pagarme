@@ -1,33 +1,16 @@
-import { CreateTransaction } from "../../../domain/usecases/createTransaction";
-import { HttpRequest, HttpResponse } from "../../api/rest/interfaces/http";
-import { badRequest, ok, serverError } from "../errors/helpers/http-helper";
-import { MissingParamError } from "../errors/missing-param-error";
+import { Request, Response } from "express";
+import { CreateTransactionUseCase } from "../../../domain/usecases/create-transaction-usecase";
+import { TransactionPostgresRepository } from "../../typeorm/repositories/transaction-repository";
 
 export class TransactionController {
-  constructor(private readonly createTransaction: CreateTransaction) { }
+  async create(request: Request, response: Response) {
+    const transactionPostgresRepository = new TransactionPostgresRepository();
+    const createTransaction = new CreateTransactionUseCase(
+      transactionPostgresRepository
+    );
 
-  async create(request: HttpRequest): Promise<HttpResponse> {
-    try {
-      const requiredFields = [
-        "description",
-        "paymentMethod",
-        "cardNumber",
-        "cardHolderName",
-        "validFrom",
-        "verificationNumber",
-      ];
+    const transaction = await createTransaction.create(request.body);
 
-      for (const field of requiredFields) {
-        if (!request.body[field]) {
-          return badRequest(new MissingParamError(field));
-        }
-      }
-
-      const transaction = await this.createTransaction.create(request.body);
-
-      return ok(transaction);
-    } catch (error) {
-      return serverError();
-    }
+    return response.json(transaction);
   }
 }

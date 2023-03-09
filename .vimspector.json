@@ -1,0 +1,20 @@
+{
+  "configurations": {
+    "run": {
+      "adapter": "vscode-node",
+       "breakpoints": {
+        "exception": {
+          "caught": "Y",
+          "uncaught": "Y"
+        }
+      },
+      "configuration": {
+        "request": "attach",
+        "protocol": "inspector",
+        "stopOnEntry": true,
+        "console": "integratedTerminal",
+        "cwd": "${workspaceRoot}"
+      }
+    }
+  }
+}

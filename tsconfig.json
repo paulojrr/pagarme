@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es5",
     "lib": [
       "es6"
     ],
+    "outDir": "out",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "commonjs",
@@ -11,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "sourceMap": true
   }
 }
