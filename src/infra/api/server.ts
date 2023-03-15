@@ -13,3 +13,5 @@ typeormDataSource
     app.listen(3000, () => console.log("Server is running at port 3000"))
   )
   .catch((error: Error) => console.log(error));
+
+export { app };
