@@ -1,21 +1,16 @@
-import { validationPipeSchema } from "../schemas/validationPipeSchema";
-import { Request, Response, NextFunction } from "express";
+import { plainToClass } from "class-transformer";
+import { validate } from "class-validator";
+import { NextFunction, Request, Response } from "express";
 
-export const validationMiddleware: any =
-  (validationSchema: any) =>
-  async (request: Request, response: Response, next: NextFunction) => {
-    const result: any = await validationPipeSchema(validationSchema, {
-      ...request.body,
-      ...request.params,
-    });
-    if (result) {
-      console.log(result);
-      return response.status(400).json({
-        success: false,
-        ...result,
-      });
+export function validateMiddleware<T extends Object>(dtoClass: new () => T) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const dto = plainToClass(dtoClass, req.body);
+    const errors = await validate(dto);
+
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation error", errors });
     }
 
     next();
-    return true;
   };
+}
