@@ -1,11 +1,10 @@
-version: "3.9"
+version: "3.7"
 services:
   db:
     image: postgres:latest
+    restart: always
     ports:
       - 5432:5432
-    volumes:
-      - ./pg-data/:/var/lib/postgresql/data
     user: root
     environment:
       POSTGRES_USER: postgres
