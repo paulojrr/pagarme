@@ -1,16 +1,21 @@
 import { Request, Response } from "express";
 import { CreateTransactionUseCase } from "../../../domain/usecases/create-transaction-usecase";
-import { TransactionPostgresRepository } from "../../typeorm/repositories/transaction-repository";
+import { TransactionPostgresRepository } from "../../typeorm/repositories/typeorm/transaction-repository";
 
 export class TransactionController {
   async create(request: Request, response: Response) {
-    const transactionPostgresRepository = new TransactionPostgresRepository();
-    const createTransaction = new CreateTransactionUseCase(
-      transactionPostgresRepository
-    );
+    try {
+      const transactionPostgresRepository = new TransactionPostgresRepository();
+      const createTransaction = new CreateTransactionUseCase(
+        transactionPostgresRepository
+      );
 
-    const transaction = await createTransaction.create(request.body);
+      await createTransaction.create(request.body);
+      const transaction = await transactionPostgresRepository.findAll()
 
-    return response.json(transaction);
+      return response.json(transaction);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
