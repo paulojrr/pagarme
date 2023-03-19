@@ -2,7 +2,7 @@ import request from "supertest";
 import { describe, expect, it } from "vitest";
 import { app } from "../../server";
 
-describe.only("Validate transaction middleware", async () => {
+describe("Validate transaction middleware", async () => {
   it("should have a valid payload", async () => {
     const response = await request(app)
       .post("/transaction")
