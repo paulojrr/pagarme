@@ -1,11 +1,15 @@
 import { Router } from "express";
-import { Transaction } from '../../../domain/entities/transaction';
-import { validateMiddleware } from '../validator/middlewares/validatorMiddleware';
+import { CreateTransactionUseCase } from "../../../domain/usecases/create-transaction-usecase";
+import { TransactionPostgresRepository } from "../../repositories/prisma/transaction-repository";
+import { validateTransaction } from '../validator/middlewares/validate-transaction-middleware';
 import { TransactionController } from "./transaction-controller";
 
-const transactionController = new TransactionController()
+const repository = new TransactionPostgresRepository()
+const useCase = new CreateTransactionUseCase(repository)
+
+const transactionController = new TransactionController(useCase, repository)
 const transactionRoutes = Router();
 
-transactionRoutes.post("/transaction", validateMiddleware(Transaction), transactionController.create);
+transactionRoutes.post("/transaction", validateTransaction, (request, response) =>  transactionController.create(request, response));
 
 export { transactionRoutes };

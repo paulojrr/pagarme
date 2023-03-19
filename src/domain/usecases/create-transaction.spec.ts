@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TransactionRepository } from "../../domain/interfaces/repositories/transaction-repository";
-import { TransactionPostgresRepositoryInMemory } from "../../infra/typeorm/repositories/in-memory/transaction-repository-in-memory";
+import { TransactionPostgresRepositoryInMemory } from "../../infra/repositories/in-memory/transaction-repository-in-memory";
 import { CreateTransactionUseCase } from "./create-transaction-usecase";
-
-vi.mock('typeorm', () => ({
-  getRepository: vi.fn().mockReturnValue(new TransactionPostgresRepositoryInMemory()),
-}));
 
 describe("create transaction", () => {
   let repository: TransactionRepository;
@@ -40,7 +36,7 @@ describe("create transaction", () => {
 
   it("should create and return a transaction", async () => {
     const transactionSpy = vi.spyOn(useCase, "create");
-    const transaction = await  useCase.create(payloadMock)
+    const transaction = await useCase.create(payloadMock);
 
     expect(transactionSpy).toHaveBeenCalledOnce();
     expect(transaction).toContainEqual(payloadReturn);

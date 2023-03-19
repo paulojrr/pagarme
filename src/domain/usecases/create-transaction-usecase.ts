@@ -1,4 +1,4 @@
-import { TransactionPostgresRepository } from "../../infra/typeorm/repositories/typeorm/transaction-repository";
+import { TransactionPostgresRepository } from "../../infra/repositories/prisma/transaction-repository";
 import { Transaction } from "./transaction-dto";
 
 export class CreateTransactionUseCase {
