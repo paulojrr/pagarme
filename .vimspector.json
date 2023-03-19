@@ -2,7 +2,7 @@
   "configurations": {
     "run": {
       "adapter": "vscode-node",
-       "breakpoints": {
+      "breakpoints": {
         "exception": {
           "caught": "Y",
           "uncaught": "Y"
