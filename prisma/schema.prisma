@@ -16,6 +16,18 @@ model Transaction {
   cardHolderName     String
   validFrom          DateTime
   verificationNumber String
+  payables           Payable  @relation(fields: [payablesId], references: [id])
+  payablesId         String   @unique
 
   @@map(name: "transactions")
+}
+
+model Payable {
+  id          String       @id @default(uuid())
+  value       Float        @db.DoublePrecision
+  status      String
+  paymentDate DateTime
+  Transaction Transaction?
+
+  @@map(name: "payables")
 }

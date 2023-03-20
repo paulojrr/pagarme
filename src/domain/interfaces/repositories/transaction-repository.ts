@@ -1,6 +1,6 @@
-import { Transaction } from "../../usecases/transaction-dto";
+import { CreateTransaction, ResponseTransaction } from "../../usecases/transaction-dto";
 
 export interface TransactionRepository {
-  create(data: Transaction): Promise<Transaction[]>;
-  findAll(): Promise<Transaction[]>;
+  create(data: CreateTransaction): Promise<ResponseTransaction[]>;
+  findAll(): Promise<ResponseTransaction[]>;
 }
