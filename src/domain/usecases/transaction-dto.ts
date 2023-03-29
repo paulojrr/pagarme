@@ -1,5 +1,6 @@
 export interface CreateTransaction {
   id?: string;
+  cpf: string;
   value: number;
   description: string;
   paymentMethod: string;
@@ -16,6 +17,7 @@ export interface CreateTransaction {
 
 export interface ResponseTransaction {
   id: string;
+  cpf: string;
   value: number;
   description: string;
   paymentMethod: string;
@@ -24,4 +26,10 @@ export interface ResponseTransaction {
   validFrom: Date;
   verificationNumber: string;
   payablesId: string,
+}
+
+export interface ResponseTransactionAvailable {
+  payables: {
+    value: number
+  }
 }
