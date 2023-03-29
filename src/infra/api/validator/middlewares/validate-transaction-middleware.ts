@@ -3,6 +3,7 @@ import Joi from "joi";
 
 const schema = Joi.object({
   value: Joi.number().positive().required(),
+  cpf: Joi.string().length(14).required(),
   description: Joi.string().required(),
   paymentMethod: Joi.string().valid("credit_card", "debit_card").required(),
   cardNumber: Joi.string().creditCard().required(),
