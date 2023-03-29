@@ -9,6 +9,7 @@ datasource db {
 
 model Transaction {
   id                 String   @id @default(uuid())
+  cpf                String
   value              Float    @db.DoublePrecision
   description        String
   paymentMethod      String
