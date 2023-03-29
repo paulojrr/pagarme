@@ -7,6 +7,7 @@ const validFrom = new Date("2020-01-01T00:00:00.000Z");
 
 const payload = {
   value: 100.0,
+  cpf: "079.430.010-36",
   description: "Test",
   paymentMethod: "credit_card",
   cardNumber: "4006604842674066",
@@ -22,6 +23,7 @@ describe("Create transaction controller", async () => {
     expect(response.status).toBe(200);
     expect(response.body[0]).toHaveProperty("id");
     expect(response.body[0]).toHaveProperty("value");
+    expect(response.body[0]).toHaveProperty("cpf");
     expect(response.body[0]).toHaveProperty("description");
     expect(response.body[0]).toHaveProperty("paymentMethod");
     expect(response.body[0]).toHaveProperty("cardNumber");
