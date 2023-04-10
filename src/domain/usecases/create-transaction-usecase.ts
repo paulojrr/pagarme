@@ -8,22 +8,27 @@ export class CreateTransactionUseCase {
   ) { }
 
   async create(data: CreateTransaction): Promise<ResponseTransaction[]> {
-    let { cardNumber, paymentMethod, value } = data
-    cardNumber = cardNumber.slice(-4);
+    const { paymentMethod, value } = data
 
     const status = checkPaymentStatus(paymentMethod)
     const fee = calculateFee(paymentMethod, value)
     const paymentDate = calculatePaymentDate(paymentMethod)
 
     const payables = {
-      ...data,
+      cardHolderName: data.cardHolderName,
+      verificationNumber: data.verificationNumber,
+      cpf: data.cpf,
+      description: data.description,
+      paymentMethod: data.paymentMethod,
+      validFrom: data.validFrom,
+      value: data.value,
+      cardNumber: data.cardNumber.slice(-4),
       payables: {
+        paymentDate,
         value: fee,
-        status,
-        paymentDate
+        status
       }
-    }
-
+    };
     return await this.transactionPostgresRepository.create(payables)
   }
-};
+}
