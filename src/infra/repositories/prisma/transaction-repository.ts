@@ -1,6 +1,5 @@
-import { formatCpf } from "../../../domain/helper/format-helper";
 import { TransactionRepository } from "../../../domain/interfaces/repositories/transaction-repository";
-import { CreateTransaction, ResponseTransaction, ResponseTransactionAvailable } from "../../../domain/usecases/transaction-dto";
+import { CreateTransaction, ResponseTransaction, TransactionPayables } from "../../../domain/usecases/transaction-dto";
 import { prisma } from "./prisma-client";
 
 export class TransactionPostgresRepository implements TransactionRepository {
@@ -31,7 +30,7 @@ export class TransactionPostgresRepository implements TransactionRepository {
     return await prisma.transaction.findMany();
   }
 
-  async findTransactionsAvailable(cpf: string): Promise<ResponseTransactionAvailable[]> {
+  async findTransactionsAvailable(cpf: string): Promise<TransactionPayables[]> {
     return await prisma.transaction.findMany({
       select: {
         payables: {
@@ -45,11 +44,15 @@ export class TransactionPostgresRepository implements TransactionRepository {
     })
   }
 
-  async findTransactionsWaitingFunds(cpf: string): Promise<ResponseTransaction[]> {
-    const formattedCpf = formatCpf(cpf)
+  async findTransactionsWaitingFunds(cpf: string): Promise<TransactionPayables[]> {
     return await prisma.transaction.findMany({
+      select: {
+        payables: {
+          select: { value: true },
+        },
+      },
       where: {
-        cpf: formattedCpf,
+        cpf,
         payables: { status: 'waiting_funds' },
       }
     })
