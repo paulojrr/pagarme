@@ -28,7 +28,7 @@ export interface ResponseTransaction {
   payablesId: string,
 }
 
-export interface ResponseTransactionAvailable {
+export interface TransactionPayables {
   payables: {
     value: number
   }
