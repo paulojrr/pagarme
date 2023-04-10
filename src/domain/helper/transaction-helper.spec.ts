@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { calculateFee, calculatePaymentDate, checkPaymentStatus } from './transaction-helper'
+import { TransactionPayables } from "../usecases/transaction-dto"
+import { calculateFee, calculatePaymentDate, calculateTotalPayables, checkPaymentStatus } from './transaction-helper'
 
 describe('transaction helper', () => {
   const debitCard = 'debit_card'
@@ -34,4 +35,36 @@ describe('transaction helper', () => {
 
     expect(calculatePaymentDate(creditCard)).toEqual(finalDate)
   })
+
+  it("returns the correct sum of payables values", () => {
+    const transactions: TransactionPayables[] = [
+      {
+        payables: {
+          value: 100,
+        },
+      },
+      {
+        payables: {
+          value: 100,
+        },
+      },
+      {
+        payables: {
+          value: 100,
+        },
+      },
+    ];
+
+    const result = calculateTotalPayables(transactions);
+
+    expect(result).toEqual(300);
+  });
+
+  it("returns 0 if transactions array is empty", () => {
+    const transactions: TransactionPayables[] = [];
+
+    const result = calculateTotalPayables(transactions);
+
+    expect(result).toEqual(0);
+  });
 })

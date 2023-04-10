@@ -1,3 +1,4 @@
+import { TransactionPayables } from "../../domain/usecases/transaction-dto"
 import { FeeEnum } from "../enums/fee-enum"
 
 export function checkPaymentStatus(paymentMethod: string): string {
@@ -17,4 +18,10 @@ export function calculateFee(paymentMethod: string, value: number): number {
 export function calculatePaymentDate(paymentMethod: string): Date {
   const date = new Date()
   return paymentMethod === 'debit_card' ? date : new Date(date.setDate(date.getDate() + 30))
+}
+
+export function calculateTotalPayables(transactions: TransactionPayables[]): number {
+  return transactions.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.payables.value
+  }, 0)
 }
