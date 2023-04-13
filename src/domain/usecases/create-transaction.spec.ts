@@ -1,11 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TransactionPostgresRepository } from "../../infra/repositories/prisma/transaction-repository";
 import { calculatePaymentDate } from "../helper/transaction-helper";
-import { TransactionRepository } from "../interfaces/repositories/transaction-repository";
 import { CreateTransactionUseCase } from "./create-transaction-usecase";
 
 describe("create transaction", () => {
-  let repository: TransactionRepository;
+  let repository: TransactionPostgresRepository;
   let useCase: CreateTransactionUseCase;
 
   beforeEach(async () => {
