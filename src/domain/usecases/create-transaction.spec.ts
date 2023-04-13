@@ -15,7 +15,7 @@ describe("create transaction", () => {
 
   const validFrom = new Date("2020-01-01T00:00:00Z");
 
-  const payloadMock = {
+  const data = {
     value: 100.0,
     cpf: "079.430.010-36",
     description: "Test",
@@ -31,7 +31,7 @@ describe("create transaction", () => {
     }
   };
 
-  const payloadReturn = [
+  const expectedReturn = [
     {
       id: expect.any(String),
       value: 100.0,
@@ -48,11 +48,11 @@ describe("create transaction", () => {
 
   it("should create and return a transaction", async () => {
     const transactionSpy = vi.spyOn(repository, "create");
-    transactionSpy.mockResolvedValue(payloadReturn);
+    transactionSpy.mockResolvedValue(expectedReturn);
 
-    const transaction = await useCase.create(payloadMock);
+    const transaction = await useCase.create(data);
 
     expect(transactionSpy).toHaveBeenCalledOnce();
-    expect(transaction).toEqual(payloadReturn);
+    expect(transaction).toEqual(expectedReturn);
   });
 });
