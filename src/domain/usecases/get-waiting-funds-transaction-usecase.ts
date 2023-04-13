@@ -2,8 +2,8 @@ import { TransactionPostgresRepository } from "../../infra/repositories/prisma/t
 import { formatCpf } from "../helper/format-helper";
 import { calculateTotalPayables } from "../helper/transaction-helper";
 
-interface ReturnAvailable {
-  available: number
+interface ReturnWaitingFunds {
+  waitingFunds: number
 }
 
 export class GetWaitingFundsTransactionUseCase {
@@ -11,13 +11,13 @@ export class GetWaitingFundsTransactionUseCase {
     private readonly transactionPostgresRepository: TransactionPostgresRepository
   ) { }
 
-  async getAvailable(cpf: string): Promise<ReturnAvailable> {
+  async getWaitingFunds(cpf: string): Promise<ReturnWaitingFunds> {
     const formattedCpf = formatCpf(cpf)
-    const transactionsAvailable = await this.transactionPostgresRepository.findTransactionsAvailable(formattedCpf)
+    const transactionsWaitingFunds = await this.transactionPostgresRepository.findTransactionsWaitingFunds(formattedCpf)
 
-    const available = calculateTotalPayables(transactionsAvailable)
+    const waitingFunds = calculateTotalPayables(transactionsWaitingFunds)
 
-    return { available }
+    return { waitingFunds }
   }
 }
 
