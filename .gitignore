@@ -3,3 +3,4 @@ node_modules
 out
 pg-data
 node_modules
+coverage
