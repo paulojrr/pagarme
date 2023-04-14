@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
+import logger from "../../../helper/logger";
 
 const schema = Joi.object({
   value: Joi.number().positive().required(),
@@ -19,6 +20,7 @@ export function validateTransaction(
 ) {
   const { error } = schema.validate(request.body);
   if (error) {
+    logger.warn(error);
     return response.status(400).json({ message: error.details[0].message });
   }
   return next();
