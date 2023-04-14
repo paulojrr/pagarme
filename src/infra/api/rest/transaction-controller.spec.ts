@@ -16,7 +16,7 @@ const payload = {
   verificationNumber: "123",
 };
 
-describe("Create transaction controller", async () => {
+describe("TransactionController", async () => {
   it("should create a transaction", async () => {
     const response = await request(app).post("/transaction").send(payload);
 
@@ -32,9 +32,8 @@ describe("Create transaction controller", async () => {
     expect(response.body[0]).toHaveProperty("verificationNumber");
   });
 
-  it("should return an error if receive invalid payload", async () => {
+  it("should return 400 status code if receive invalid payload", async () => {
     const response = await request(app).post("/transaction").send({});
-
     expect(response.status).toBe(400);
   });
 
@@ -43,6 +42,42 @@ describe("Create transaction controller", async () => {
     transactionSpy.mockRejectedValue(new Error("Error"));
 
     const response = await request(app).post("/transaction").send(payload);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Error");
+  });
+
+  it("should return available value", async () => {
+    const response = await request(app).get("/transaction/available?cpf=07943001036")
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("available");
+  });
+
+  it("should return waiting funds values", async () => {
+    const response = await request(app).get("/transaction/waitingFunds?cpf=07943001036")
+
+    console.log(response.body)
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("waitingFunds");
+  });
+
+  it("should return 400 status code if return an error in available transactions", async () => {
+    const transactionSpy = vi.spyOn(prisma.transaction, "findMany");
+    transactionSpy.mockRejectedValue(new Error("Error"));
+
+    const response = await request(app).get("/transaction/available?cpf=07943001036")
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Error");
+
+  });
+
+  it("should return 400 status code if return an error in waitingFunds transactions", async () => {
+    const transactionSpy = vi.spyOn(prisma.transaction, "findMany");
+    transactionSpy.mockRejectedValue(new Error("Error"));
+
+    const response = await request(app).get("/transaction/waitingFunds?cpf=07943001036")
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Error");
