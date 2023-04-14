@@ -1,36 +1,40 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TransactionPostgresRepository } from "../../infra/repositories/prisma/transaction-repository";
 import { GetWaitingFundsTransactionUseCase } from "./get-waiting-funds-transaction-usecase";
 
 describe("GetWaitingFundsTransactionUseCase", () => {
-  let repository: TransactionPostgresRepository;
-  let useCase: GetWaitingFundsTransactionUseCase;
-
-  beforeEach(async () => {
-    repository = new TransactionPostgresRepository();
-    useCase = new GetWaitingFundsTransactionUseCase(repository);
-  });
-
-  const cpf = "079.430.010-36"
-
-  const transactions = [
-    { payables: { value: 95 } },
-    { payables: { value: 95 } },
-    { payables: { value: 95 } },
-    { payables: { value: 95 } },
-  ]
-
-  const expectedReturn = {
-    "waitingFunds": 380
+  const repositoryMock = {
+    findTransactionsWaitingFunds: vi.fn()
   }
 
-  it("should return waiting funds", async () => {
-    const transactionSpy = vi.spyOn(repository, "findTransactionsWaitingFunds");
-    transactionSpy.mockResolvedValue(transactions);
+  let useCase = new GetWaitingFundsTransactionUseCase(repositoryMock as any);
 
-    const transaction = await useCase.getWaitingFunds(cpf);
+  beforeEach(() => {
+    vi.clearAllMocks()
+  });
 
-    expect(transactionSpy).toHaveBeenCalledOnce();
-    expect(transaction).toEqual(expectedReturn);
+  it("should return available balance when funds exist", async () => {
+    const cpf = "111.111.111-11";
+    const transactionsFunds = [{ payables: { value: 100 } }, { payables: { value: 200 } }];
+    const expectedFunds = 300;
+
+    repositoryMock.findTransactionsWaitingFunds.mockResolvedValue(transactionsFunds);
+
+    const result = await useCase.getWaitingFunds(cpf);
+
+    expect(repositoryMock.findTransactionsWaitingFunds).toHaveBeenCalledWith(cpf);
+    expect(result.waitingFunds).toEqual(expectedFunds);
+  });
+
+  it("should return 0 when no transactions exist", async () => {
+    const cpf = "222.222.222-22";
+    const transactionsAvailable: any = [];
+    const expectedFunds = 0;
+
+    repositoryMock.findTransactionsWaitingFunds.mockResolvedValue(transactionsAvailable);
+
+    const result = await useCase.getWaitingFunds(cpf);
+
+    expect(repositoryMock.findTransactionsWaitingFunds).toHaveBeenCalledWith(cpf);
+    expect(result.waitingFunds).toEqual(expectedFunds);
   });
 });
