@@ -57,7 +57,6 @@ describe("TransactionController", async () => {
   it("should return waiting funds values", async () => {
     const response = await request(app).get("/transaction/waitingFunds?cpf=07943001036")
 
-    console.log(response.body)
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("waitingFunds");
   });
