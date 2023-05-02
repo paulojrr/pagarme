@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --inspect --respawn  --exit-child --transpile-only ./src/infra/api/server.ts",
     "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "migration": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
