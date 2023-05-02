@@ -8,7 +8,7 @@ Dentro do diretório do projeto, use os seguintes comandos:
 ```
 npm install
 docker compose up -d
-npm run prisma migrate dev
+npm run migration
 npm run dev
 ```
 A API está configurada para utilizar a porta 3000.
